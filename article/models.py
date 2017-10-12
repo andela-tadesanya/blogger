@@ -2,4 +2,14 @@ from django.db import models
 
 # Create your models here.
 class Article(models.Model):
-    pass
+    writer = models.CharField(max_length=100)
+    title = models.CharField(max_length=25)
+    content = models.TextField()
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL)
+    image = models.CharField(max_length=50)
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self):
+        return self.name
