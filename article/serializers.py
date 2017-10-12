@@ -11,4 +11,4 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
-        fields = ('name')
+        fields = ('name',)
