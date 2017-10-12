@@ -16,7 +16,7 @@ class Article(models.Model):
     writer = models.CharField(max_length=100)
     title = models.CharField(max_length=25)
     content = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     image = models.CharField(max_length=50)
 
     class Meta:
