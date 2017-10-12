@@ -1,6 +1,17 @@
 from django.db import models
 
+
 # Create your models here.
+class Category(models.Model):
+    name = models.CharField(max_length=25)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class Article(models.Model):
     writer = models.CharField(max_length=100)
     title = models.CharField(max_length=25)
@@ -12,4 +23,4 @@ class Article(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return self.name
+        return self.title
