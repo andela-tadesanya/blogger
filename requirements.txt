@@ -1,0 +1,4 @@
+Django==1.10
+djangorestframework==3.7.0
+Markdown==2.6.9
+psycopg2==2.7.3.1
