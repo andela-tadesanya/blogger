@@ -1,6 +1,8 @@
 from django.test import TestCase
 from models import Article, Category
 from serializers import ArticleSerializer, CategorySerializer
+from rest_framework.test import APIClient
+from django.contrib.auth.models import User
 
 
 # Test models.
@@ -65,4 +67,74 @@ class ArticleSerializersTestCase(TestCase):
 
 # Test views.
 class ArticleViewTestCase(TestCase):
-    pass
+    def setUp(self):
+        self.cat = Category.objects.create(name="fiction")
+        Article.objects.create(
+            writer="tosin",
+            title="things fall apart",
+            content="A very, very, loooong story",
+            category=self.cat,
+            image="path/to/img.jpg")
+
+        # Create a user
+        self.adminuser = User.objects.create_user('admin', 'admin@test.com', 'pass')
+        self.adminuser.save()
+        self.adminuser.is_staff = True
+        self.adminuser.save()
+
+    def tearDown(self):
+        pass
+
+    def test_user_can_view_articles_without_logging_in(self):
+        client = APIClient()
+        response = client.get('/articles/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_cannot_post_article_without_logging_in(self):
+        client = APIClient()
+        payload = {
+            'writer': 'tosin',
+            'title': 'how to cook',
+            'content': 'boil water',
+            'category': self.cat.id,
+            'image': 'url/to/image'
+        }
+        response = client.post('/articles/', payload, format='json')
+        self.assertEqual(response.status_code, 403)
+
+    def test_user_can_post_articles_when_logged_in(self):
+        client = APIClient()
+        client.login(username='admin', password='pass')
+        payload = {
+            'writer': 'tosin',
+            'title': 'how to cook',
+            'content': 'boil water',
+            'category': self.cat.id,
+            'image': 'url/to/image'
+        }
+        response = client.post('/articles/', payload, format='json')
+        self.assertEqual(response.status_code, 201)
+        client.logout()
+
+    def test_user_can_view_category_without_logging_in(self):
+        client = APIClient()
+        response = client.get('/categories/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_cannot_post_category_without_logging_in(self):
+        client = APIClient()
+        payload = {
+            'name': 'sports'
+        }
+        response = client.post('/categories/', payload, format='json')
+        self.assertEqual(response.status_code, 403)
+
+    def test_user_can_post_category_when_logged_in(self):
+        client = APIClient()
+        client.login(username='admin', password='pass')
+        payload = {
+            'name': 'sports'
+        }
+        response = client.post('/categories/', payload, format='json')
+        self.assertEqual(response.status_code, 201)
+        client.logout()
