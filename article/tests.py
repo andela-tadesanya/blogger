@@ -31,12 +31,6 @@ class ArticleModelsTestCase(TestCase):
 class ArticleSerializersTestCase(TestCase):
     def setUp(self):
         self.cat = Category.objects.create(name="fiction")
-        self.Article.objects.create(
-            writer="tosin",
-            title="things fall apart",
-            content="A very, very, loooong story",
-            category=self.cat,
-            image="path/to/img.jpg")
 
     def tearDown(self):
         pass
@@ -65,5 +59,10 @@ class ArticleSerializersTestCase(TestCase):
         self.assertEqual(article.writer, data['writer'])
         self.assertEqual(article.title, data['title'])
         self.assertEqual(article.content, data['content'])
-        self.assertEqual(article.category, data['category'])
+        self.assertEqual(article.category.id, data['category'])
         self.assertEqual(article.image, data['image'])
+
+
+# Test views.
+class ArticleViewTestCase(TestCase):
+    pass
