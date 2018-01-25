@@ -16,4 +16,4 @@ create a Django superuser `python manage.py createsuperuser` and send your usern
 
 # TODO
 Because of time constraints I was unable to implement the following features:
-- Public users see articles
+- endpoint to get a user token (make use of Basic Auth till this is implemented)
